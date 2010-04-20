@@ -6,6 +6,7 @@ import socket
 import json
 import bsddb
 import urllib2
+import getpass
 
 GREEN = "\033[01;32m"
 
@@ -99,7 +100,7 @@ class http_client(asyncore.dispatcher):
 
 if __name__ == '__main__':
     username = sys.argv[1]
-    password = sys.argv[2]
+    password = getpass.getpass()
     c = http_client('chirpstream.twitter.com', '/2b/user.json', username, password)
     asyncore.loop()
 
