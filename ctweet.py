@@ -75,9 +75,6 @@ class http_client(asyncore.dispatcher):
                                 self.db[key] = target
                             target_data = json.loads(target)
 
-                            source_data = {'screen_name': 'dan'}
-                            target_data = {'screen_name': 'dan'}
-
                             print GREEN + "<%s> " % data['event'] + "\033[00;37m" + \
                                     "by %s, %s: %s" % (source_data['screen_name'], target_data['screen_name'], tweet_data['text'])
                         else:
@@ -89,7 +86,7 @@ class http_client(asyncore.dispatcher):
 
                     self.tweet_buffer = ""
         except Exception, e:
-            print type(e), e
+            pass
 
         self.db.sync()
 
