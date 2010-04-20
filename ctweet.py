@@ -48,7 +48,7 @@ class http_client(asyncore.dispatcher):
                                 " id: %s, user: %s" % (data['delete']['status']['id'], \
                                 data['delete']['status']['user_id'])
                     elif 'event' in data:
-                        if data['event'] == 'favorite' or data['event'] == 'unfavorite':
+                        if data['event'] in ['favorite', 'unfavorite', 'retweet']:
                             key = 'tweet_%s' % data['target_object']['id']
                             tweet = self.db.get(key)
                             if not tweet:
@@ -88,6 +88,7 @@ class http_client(asyncore.dispatcher):
                     self.tweet_buffer = ""
         except Exception, e:
             pass
+            #print e, self.tweet_buffer.split("\r\n")
 
         self.db.sync()
 
