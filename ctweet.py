@@ -9,6 +9,19 @@ import urllib2
 import getpass
 
 GREEN = "\033[01;32m"
+RED = "\033[01;31m"
+WHITE = "\033[00;37m"
+AQUA = "\033[01;36m"
+
+def tweet_info(tweet_id = 1234):
+    url = "http://api.twitter.com/1/statuses/show.json?id=%d" % tweet_id
+    response = urllib2.urlopen(url)
+    return response.read()
+
+def user_info(user_id = 1234):
+    url = "http://api.twitter.com/1/users/show.json?user_id=%d" % user_id
+    response = urllib2.urlopen(url)
+    return response.read()
 
 class http_client(asyncore.dispatcher):
 
@@ -44,7 +57,7 @@ class http_client(asyncore.dispatcher):
                     data = json.loads(self.tweet_buffer[left_brace:right_brace+1])
 
                     if 'delete' in data:
-                        print "\033[01;31m" + "<deletion>" + "\033[00;37m" + \
+                        print RED + "<deletion>" + WHITE + \
                                 " id: %s, user: %s" % (data['delete']['status']['id'], \
                                 data['delete']['status']['user_id'])
                     elif 'event' in data:
@@ -52,42 +65,36 @@ class http_client(asyncore.dispatcher):
                             key = 'tweet_%s' % data['target_object']['id']
                             tweet = self.db.get(key)
                             if not tweet:
-                                url = "http://api.twitter.com/1/statuses/show.json?id=%d" % data['target_object']['id']
-                                response = urllib2.urlopen(url)
-                                tweet = response.read()
+                                tweet = tweet_info(data['target_object']['id'])
                                 self.db[key] = tweet
                             tweet_data = json.loads(tweet)
 
                             key = 'user_%s' % data['source']['id']
                             source = self.db.get(key)
                             if not source:
-                                url = "http://api.twitter.com/1/users/show.json?user_id=%d" % data['source']['id']
-                                response = urllib2.urlopen(url)
-                                source = response.read()
+                                source = user_info(data['source']['id'])
                                 self.db[key] = source
                             source_data = json.loads(source)
 
                             key = 'user_%s' % data['target']['id']
                             target = self.db.get(key)
                             if not target:
-                                url = "http://api.twitter.com/1/users/show.json?user_id=%d" % data['target']['id']
-                                response = urllib2.urlopen(url)
-                                target = response.read()
+                                target = user_info(data['target']['id'])
                                 self.db[key] = target
                             target_data = json.loads(target)
 
-                            print GREEN + "<%s> " % data['event'] + "\033[00;37m" + \
+                            print GREEN + "<%s> " % data['event'] + WHITE + \
                                     "by %s, %s: %s" % (source_data['screen_name'], target_data['screen_name'], tweet_data['text'])
                         else:
-                            print GREEN + "<%s> " % data['event'] + "\033[00;37m" + \
+                            print GREEN + "<%s> " % data['event'] + WHITE + \
                                     "source: %s, target: %s" % (data['source']['id'], data['target']['id'])
                     elif 'id' in data:
-                        print "\033[01;36m" + "<tweet> " + "\033[00;37m" + \
+                        print AQUA + "<tweet> " + WHITE + \
                                 data['user']['screen_name'] + ": " + data['text']
 
                     self.tweet_buffer = ""
         except Exception, e:
-            pass
+            print e, self.tweet_buffer.split("\r\n")
             #print e, self.tweet_buffer.split("\r\n")
 
         self.db.sync()
