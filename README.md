@@ -19,7 +19,7 @@ or fixes something that's broken.
 Release Notes
 =============
 
-1.0 (04/20/2010)
+0.1 (04/20/2010)
 
   * Implementation for `tweet`, `follow`, `favorite`, `unfavorite`, and `retweet`.
 
