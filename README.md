@@ -21,7 +21,7 @@ Release Notes
 
 0.2 (04/20/2010)
 
-  * Clean up how deletion are displayed
+  * Clean up how deletions are displayed.
 
 0.1 (04/20/2010)
 
