@@ -44,7 +44,7 @@ class http_client(asyncore.dispatcher):
 
     def handle_read(self):
         d = self.recv(8192)
-        self.tweet_buffer += d
+        self.tweet_buffer += d.strip()
 
         try:
             for item in self.tweet_buffer.split("\r\n"):
