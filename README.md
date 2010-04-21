@@ -19,6 +19,10 @@ or fixes something that's broken.
 Release Notes
 =============
 
+0.3 (04/20/2010)
+
+  * Add more contextual info for follows.
+
 0.2 (04/20/2010)
 
   * Clean up how deletions are displayed.

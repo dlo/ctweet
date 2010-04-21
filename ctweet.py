@@ -67,6 +67,21 @@ class http_client(asyncore.dispatcher):
                         print RED + "<deletion>" + WHITE + \
                                 " %s deleted a tweet (%d)" % (source_data['screen_name'], data['delete']['status']['id'])
                     elif 'event' in data:
+
+                        key = 'user_%s' % data['source']['id']
+                        source = self.db.get(key)
+                        if not source:
+                            source = user_info(data['source']['id'])
+                            self.db[key] = source
+                        source_data = json.loads(source)
+
+                        key = 'user_%s' % data['target']['id']
+                        target = self.db.get(key)
+                        if not target:
+                            target = user_info(data['target']['id'])
+                            self.db[key] = target
+                        target_data = json.loads(target)
+
                         if data['event'] in ['favorite', 'unfavorite', 'retweet']:
                             key = 'tweet_%s' % data['target_object']['id']
                             tweet = self.db.get(key)
@@ -75,25 +90,14 @@ class http_client(asyncore.dispatcher):
                                 self.db[key] = tweet
                             tweet_data = json.loads(tweet)
 
-                            key = 'user_%s' % data['source']['id']
-                            source = self.db.get(key)
-                            if not source:
-                                source = user_info(data['source']['id'])
-                                self.db[key] = source
-                            source_data = json.loads(source)
-
-                            key = 'user_%s' % data['target']['id']
-                            target = self.db.get(key)
-                            if not target:
-                                target = user_info(data['target']['id'])
-                                self.db[key] = target
-                            target_data = json.loads(target)
-
                             print GREEN + "<%s> " % data['event'] + WHITE + \
                                     "by %s, %s: %s" % (source_data['screen_name'], target_data['screen_name'], tweet_data['text'])
+                        elif data['event'] == 'follow':
+                            print GREEN + "<follow> " + WHITE + "%s started following %s" % (source_data['screen_name'],
+                                    target_data['screen_name'])
                         else:
                             print GREEN + "<%s> " % data['event'] + WHITE + \
-                                    "source: %s, target: %s" % (data['source']['id'], data['target']['id'])
+                                    "source: %s, target: %s" % (source_data['screen_name'], target_data['screen_name'])
                     elif 'id' in data:
                         print AQUA + "<tweet> " + WHITE + \
                                 data['user']['screen_name'] + ": " + data['text']
