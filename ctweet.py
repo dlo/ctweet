@@ -57,9 +57,15 @@ class http_client(asyncore.dispatcher):
                     data = json.loads(self.tweet_buffer[left_brace:right_brace+1])
 
                     if 'delete' in data:
+                        key = 'user_%s' % data['delete']['status']['user_id']
+                        source = self.db.get(key)
+                        if not source:
+                            source = user_info(data['delete']['status']['user_id'])
+                            self.db[key] = source
+                        source_data = json.loads(source)
+
                         print RED + "<deletion>" + WHITE + \
-                                " id: %s, user: %s" % (data['delete']['status']['id'], \
-                                data['delete']['status']['user_id'])
+                                " %s deleted a tweet (%d)" % (source_data['screen_name'], data['delete']['status']['id'])
                     elif 'event' in data:
                         if data['event'] in ['favorite', 'unfavorite', 'retweet']:
                             key = 'tweet_%s' % data['target_object']['id']
@@ -94,8 +100,7 @@ class http_client(asyncore.dispatcher):
 
                     self.tweet_buffer = ""
         except Exception, e:
-            print e, self.tweet_buffer.split("\r\n")
-            #print e, self.tweet_buffer.split("\r\n")
+            pass
 
         self.db.sync()
 

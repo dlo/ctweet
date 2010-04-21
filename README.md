@@ -19,6 +19,10 @@ or fixes something that's broken.
 Release Notes
 =============
 
+0.2 (04/20/2010)
+
+  * Clean up how deletion are displayed
+
 0.1 (04/20/2010)
 
   * Implementation for `tweet`, `follow`, `favorite`, `unfavorite`, and `retweet`.
