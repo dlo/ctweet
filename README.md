@@ -16,13 +16,7 @@ You'll get prompted for your password (don't worry, it will not get sent to my
 personal stolen passwords server, I promise), and off you go.
 
 Caching is done locally via Berkeley DB (in a file calling `/tmp/twitter.db`),
-so it's doubtful you'll hit the Twitter API rate limit. If you do, well, you
-are going to need to talk to Twitter about your problem.
-
-Example
-=======
-
-![](http://farm5.static.flickr.com/4023/4538789609_67c20a29e7.jpg)
+so it's doubtful you'll hit the Twitter API rate limit.
 
 Contributing
 ============
@@ -38,6 +32,10 @@ Wish List
 
 Release Notes
 =============
+
+0.4 (07/28/2010)
+
+  * Add Growl notifications, stop notifications on command line.
 
 0.3 (04/20/2010)
 
