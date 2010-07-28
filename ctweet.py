@@ -51,7 +51,6 @@ class http_client(asyncore.dispatcher):
             try:
                 data = json.loads(self.receive_send_buffer)
             except:
-                print "EXCEPTION: ", len(self.receive_send_buffer), " ", self.receive_send_buffer
                 data = {}
 
             if 'delete' in data:
